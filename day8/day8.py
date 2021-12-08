@@ -6,11 +6,8 @@ def part1():
     count = 0
 
     for c in content:
-        outputs = c.split(" | ")[1].split(" ")
-        for o in outputs:
-            if len(o) == 2 or len(o) == 3 or len(o) == 4 or len(o) == 7:
-                count += 1
-
+        count += sum(map(int, [len(o) == 2 or len(o) == 3 or len(o) == 4 or len(o) == 7 for o in c.split(" | ")[1].split(" ")]))
+    
     return count
 
 # Part 2 - Abandon Hope All Ye Who Enter Here
@@ -24,6 +21,11 @@ def find9(inputs, num_set):
     for i in inputs:
         num_set[9] = "".join(list(set(num_set[3] + num_set[4])))
 
+def find5(inputs, num_set):
+    for i in inputs:
+        if len(i) == 5 and not all(n in i for n in num_set[3]) and all(n in i for n in list(set(num_set[9]) - set(num_set[1]))):
+            num_set[5] = i
+
 def find0(inputs, num_set):
     for i in inputs:
         if len(i) == 6 and all(n in i for n in num_set[1]) and not all(n in i for n in num_set[9]):
@@ -33,11 +35,6 @@ def find6(inputs, num_set):
     for i in inputs:
         if len(i) == 6 and not all(n in i for n in num_set[0]) and not all(n in i for n in num_set[9]):
             num_set[6] = i
-
-def find5(inputs, num_set):
-    for i in inputs:
-        if len(i) == 5 and not all(n in i for n in num_set[3]) and all(n in i for n in list(set(num_set[4]) - set(num_set[1]))):
-            num_set[5] = i
 
 def find2(inputs, num_set):
     for i in inputs:
@@ -67,21 +64,19 @@ def part2():
 
             find3(inputs, num_set)
             find9(inputs, num_set)
+            find5(inputs, num_set)
             find0(inputs, num_set)
             find6(inputs, num_set)
-            find5(inputs, num_set)
             find2(inputs, num_set)
 
         display = ""
 
-        for o in outputs:            
-            for k, v in num_set.items():
-                if set(o) == set(v):
-                    display += str(k)
+        for o in outputs:
+            display += str("".join([str(k) for k,v in num_set.items() if set(o) == set(v)]))            
 
         total += int(display)
     
     return total
 
-print(f"Solution to part 1 {part1()}")
+print(f"Solution to part 1: {part1()}")
 print(f"Solution to part 2: {part2()}")
