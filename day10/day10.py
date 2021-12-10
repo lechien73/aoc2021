@@ -2,8 +2,7 @@ from math import floor
 
 content = list(map(str, open("day10.txt").read().splitlines()))
 
-score_p1 = {")": 3, "]": 57, "}": 1197, ">": 25137}
-score_p2 = {")": 1, "]": 2, "}": 3, ">": 4}
+scores = {")": [3, 1], "]": [57, 2], "}": [1197, 3], ">": [25137, 4]}
 matched = {"(": ")", "[": "]", "{": "}", "<": ">"}
 
 def check_syntax(line):
@@ -16,7 +15,7 @@ def check_syntax(line):
             if c == closing[-1]:
                 closing.pop()
             else:
-                return (score_p1[c], line, closing)
+                return (scores[c][0], line, closing)
                 
     return (0, line, closing)
 
@@ -29,14 +28,11 @@ def part1():
     return running_total
 
 def part2():
-    clean = []
     corrupted = []
     for line in content:
         score, line, _ = check_syntax(line)
         if score > 0:
             corrupted.append(line)
-        else:
-            clean.append(line)
 
     clean = [i for i in content if i not in corrupted]
     totals = []
@@ -49,7 +45,7 @@ def part2():
         closing.reverse()
 
         for c in closing:
-            running_total = (running_total * 5) + score_p2[c]
+            running_total = (running_total * 5) + scores[c][1]
         
         totals.append(running_total)
     
